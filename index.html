@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>MedAI X | AI Doctor from 2035</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            background: #020617;
+            color: #FFFFFF;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* анимированная сетка на фоне */
+        .grid-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            opacity: 0.08;
+            pointer-events: none;
+            background-image: 
+                linear-gradient(#00F5FF 1px, transparent 1px),
+                linear-gradient(90deg, #00F5FF 1px, transparent 1px);
+            background-size: 50px 50px;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* плавающие неоновые сферы */
+        .orb {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(80px);
+            z-index: 0;
+            pointer-events: none;
+            animation: float 12s ease-in-out infinite;
+        }
+
+        .orb-1 { width: 400px; height: 400px; background: #00F5FF; top: -100px; right: -100px; opacity: 0.15; }
+        .orb-2 { width: 350px; height: 350px; background: #8B5CF6; bottom: -80px; left: -80px; opacity: 0.12; animation-delay: -3s; }
+        .orb-3 { width: 250px; height: 250px; background: #EC4899; top: 50%; right: 20%; opacity: 0.08; animation-delay: -6s; }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-30px) rotate(5deg); }
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 32px;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Hero Section — первый экран на весь экран */
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+        }
+
+        .neon-title {
+            font-size: 7rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00F5FF, #8B5CF6, #EC4899);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            letter-spacing: -2px;
+            text-shadow: 0 0 30px rgba(0,245,255,0.3);
+            animation: titleGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes titleGlow {
+            0%, 100% { filter: drop-shadow(0 0 10px rgba(0,245,255,0.3)); }
+            50% { filter: drop-shadow(0 0 30px rgba(0,245,255,0.6)); }
+        }
+
+        .hero-sub {
+            font-size: 1.4rem;
+            color: #94A3B8;
+            margin-top: 24px;
+            max-width: 600px;
+        }
+
+        .features-list {
+            display: flex;
+            gap: 32px;
+            margin: 48px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .feature-chip {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(0,245,255,0.2);
+            padding: 10px 24px;
+            border-radius: 60px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #00F5FF;
+        }
+
+        .glow-btn {
+            background: linear-gradient(135deg, #00F5FF, #8B5CF6);
+            border: none;
+            padding: 18px 48px;
+            border-radius: 60px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #020617;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 0 20px rgba(0,245,255,0.4);
+        }
+
+        .glow-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 40px rgba(0,245,255,0.7);
+        }
+
+        /* голографический мозг */
+        .hologram-section {
+            padding: 80px 0;
+            text-align: center;
+        }
+
+        .hologram {
+            background: radial-gradient(ellipse at center, rgba(0,245,255,0.1) 0%, rgba(139,92,246,0.05) 70%, transparent 100%);
+            border-radius: 50%;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            animation: hologramPulse 3s ease-in-out infinite;
+        }
+
+        @keyframes hologramPulse {
+            0%, 100% { box-shadow: 0 0 50px rgba(0,245,255,0.2); }
+            50% { box-shadow: 0 0 100px rgba(0,245,255,0.5); }
+        }
+
+        .brain-icon {
+            font-size: 120px;
+            filter: drop-shadow(0 0 20px #00F5FF);
+        }
+
+        .floating-data {
+            position: absolute;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(8px);
+            padding: 6px 14px;
+            border-radius: 40px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            color: #00F5FF;
+            border: 1px solid rgba(0,245,255,0.4);
+            white-space: nowrap;
+            animation: floatData 6s ease-in-out infinite;
+        }
+
+        .data-1 { top: 10%; left: 10%; animation-delay: 0s; }
+        .data-2 { top: 20%; right: 5%; animation-delay: -1s; }
+        .data-3 { bottom: 15%; left: 15%; animation-delay: -2s; }
+        .data-4 { bottom: 25%; right: 12%; animation-delay: -3s; }
+        .data-5 { top: 40%; left: -5%; animation-delay: -4s; }
+        .data-6 { bottom: 40%; right: -8%; animation-delay: -5s; }
+
+        @keyframes floatData {
+            0%, 100% { transform: translateY(0); opacity: 0.7; }
+            50% { transform: translateY(-15px); opacity: 1; }
+        }
+
+        /* AI Diagnostic — чат с анимацией */
+        .diagnostic-section {
+            background: rgba(255,255,255,0.02);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 48px;
+            margin: 60px 0;
+            border: 1px solid rgba(0,245,255,0.2);
+        }
+
+        .diagnostic-header {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 32px;
+            text-align: center;
+            background: linear-gradient(135deg, #00F5FF, #8B5CF6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .chat-messages {
+            background: rgba(0,0,0,0.5);
+            border-radius: 32px;
+            padding: 24px;
+            height: 350px;
+            overflow-y: auto;
+            border: 1px solid rgba(0,245,255,0.15);
+        }
+
+        .ai-analysis-animation {
+            background: linear-gradient(90deg, #00F5FF, #8B5CF6, #EC4899);
+            background-size: 200%;
+            animation: gradientShift 2s ease infinite;
+            border-radius: 20px;
+            padding: 16px;
+            margin: 10px 0;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            100% { background-position: 100% 50%; }
+        }
+
+        .confidence-bar {
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .confidence-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00F5FF, #8B5CF6);
+            width: 0%;
+            transition: width 1s ease;
+        }
+
+        .diagnostic-input {
+            display: flex;
+            gap: 16px;
+        }
+
+        .diagnostic-input input {
+            flex: 1;
+            background: rgba(0,0,0,0.6);
+            border: 1px solid rgba(0,245,255,0.3);
+            padding: 16px 24px;
+            border-radius: 60px;
+            color: white;
+            font-size: 1rem;
+        }
+
+        .diagnostic-input input:focus {
+            outline: none;
+            border-color: #00F5FF;
+            box-shadow: 0 0 15px rgba(0,245,255,0.3);
+        }
+
+        /* Health Score */
+        .health-score-card {
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 48px;
+            padding: 40px;
+            text-align: center;
+            border: 1px solid rgba(0,245,255,0.2);
+            margin: 40px 0;
+        }
+
+        .score-circle {
+            width: 200px;
+            height: 200px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .score-value {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00F5FF, #EC4899);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        canvas {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* стеклянные карточки */
+        .glass-cards {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            margin: 60px 0;
+        }
+
+        .glass-card {
+            flex: 1;
+            min-width: 220px;
+            background: rgba(255,255,255,0.03);
+            backdrop-filter: blur(20px);
+            border-radius: 32px;
+            padding: 32px;
+            text-align: center;
+            border: 1px solid rgba(0,245,255,0.1);
+            transition: all 0.3s;
+            cursor: pointer;
+        }
+
+        .glass-card:hover {
+            border-color: #00F5FF;
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0,245,255,0.1);
+        }
+
+        /* статистика */
+        .stats-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            justify-content: center;
+            margin: 70px 0;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 2.8rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #00F5FF, #8B5CF6);
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+        }
+
+        footer {
+            padding: 60px 0 40px;
+            text-align: center;
+            border-top: 1px solid rgba(0,245,255,0.1);
+            margin-top: 60px;
+        }
+
+        @media (max-width: 768px) {
+            .neon-title { font-size: 3rem; }
+            .container { padding: 0 20px; }
+            .hologram { width: 280px; height: 280px; }
+            .brain-icon { font-size: 70px; }
+            .floating-data { font-size: 0.5rem; padding: 3px 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="grid-bg"></div>
+<div class="orb orb-1"></div>
+<div class="orb orb-2"></div>
+<div class="orb orb-3"></div>
+
+<div class="container">
+    <!-- Hero -->
+    <div class="hero">
+        <div class="neon-title">MedAI X</div>
+        <div class="hero-sub">Искусственный интеллект, который понимает ваше здоровье</div>
+        <div class="features-list">
+            <span class="feature-chip">🔬 Анализ симптомов</span>
+            <span class="feature-chip">🚑 Первая помощь</span>
+            <span class="feature-chip">📊 Персональные рекомендации</span>
+            <span class="feature-chip">🧠 AI-консультации 24/7</span>
+        </div>
+        <button class="glow-btn" id="startDiagnosticBtn">⚡ Начать диагностику</button>
+    </div>
+
+    <!-- Голографический мозг -->
+    <div class="hologram-section">
+        <div class="hologram">
+            <div class="brain-icon">🧠</div>
+            <div class="floating-data data-1">❤️ Heart Rate</div>
+            <div class="floating-data data-2">🩸 Blood Pressure</div>
+            <div class="floating-data data-3">🧠 AI Analysis</div>
+            <div class="floating-data data-4">📡 Neural Scan</div>
+            <div class="floating-data data-5">📊 Health Score</div>
+            <div class="floating-data data-6">⚡ Deep Learning</div>
+        </div>
+        <p style="margin-top: 30px; color: #64748B; font-size: 0.9rem;">Голографический AI-интерфейс • Нейросетевая диагностика 2035</p>
+    </div>
+
+    <!-- Блок диагностики с AI -->
+    <div class="diagnostic-section" id="diagnosticSection">
+        <div class="diagnostic-header">🧬 AI Диагностика нового поколения</div>
+        <div class="chat-area">
+            <div class="chat-messages" id="chatMessages">
+                <div class="ai-analysis-animation" style="background: rgba(0,245,255,0.1); padding: 16px; border-radius: 20px;">
+                    🤖 MedAI X Online — Нейросеть готова к анализу. Опишите ваши симптомы...
+                </div>
+            </div>
+            <div class="diagnostic-input">
+                <input type="text" id="symptomInput" placeholder="Например: У меня болит голова и температура 38.5...">
+                <button class="glow-btn" id="analyzeBtn" style="padding: 12px 32px;">🧠 Анализ</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Health Score -->
+    <div class="health-score-card">
+        <h3 style="margin-bottom: 20px;">⚡ YOUR HEALTH SCORE</h3>
+        <div class="score-circle">
+            <canvas id="healthCanvas" width="200" height="200"></canvas>
+            <div class="score-value" id="scoreValue">92<span style="font-size: 1.5rem;">%</span></div>
+        </div>
+        <p style="margin-top: 24px; color: #94A3B8;">AI Confidence Score • На основе вашего состояния</p>
+    </div>
+
+    <!-- Стеклянные карточки первой помощи -->
+    <div class="glass-cards">
+        <div class="glass-card" data-aid="burn">🔥 Ожог</div>
+        <div class="glass-card" data-aid="fracture">🦴 Перелом</div>
+        <div class="glass-card" data-aid="bleeding">🩸 Кровотечение</div>
+        <div class="glass-card" data-aid="heart">❤️ Сердечный приступ</div>
+        <div class="glass-card" data-aid="faint">⚡ Потеря сознания</div>
+        <div class="glass-card" data-aid="bite">🐍 Укус</div>
+    </div>
+
+    <!-- Статистика -->
+    <div class="stats-grid">
+        <div class="stat-item"><div class="stat-number" id="stat1">500 000+</div><div>AI анализов</div></div>
+        <div class="stat-item"><div class="stat-number" id="stat2">98.7%</div><div>точность</div></div>
+        <div class="stat-item"><div class="stat-number" id="stat3">24/7</div><div>доступность</div></div>
+        <div class="stat-item"><div class="stat-number" id="stat4">150+</div><div>видов симптомов</div></div>
+    </div>
+
+    <footer>
+        <div style="font-size: 2rem; margin-bottom: 20px;">⚡🧠</div>
+        <div style="font-size: 1.2rem; font-weight: 600;">Future of Healthcare Starts Here</div>
+        <div style="margin-top: 16px; color: #64748B;">MedAI X — AI-платформа интеллектуальной диагностики и первой помощи нового поколения</div>
+        <div style="margin-top: 24px; font-size: 0.8rem; color: #334155;">⚠️ Учебная AI-система • При серьёзных симптомах обратитесь к врачу</div>
+    </footer>
+</div>
+
+<script>
+    // Медицинский ИИ для MedAI X
+    const chatMessages = document.getElementById('chatMessages');
+    const symptomInput = document.getElementById('symptomInput');
+    const analyzeBtn = document.getElementById('analyzeBtn');
+    let currentConfidence = 87;
+    let currentHealthScore = 92;
+
+    // Health Score Canvas
+    const canvas = document.getElementById('healthCanvas');
+    const ctx = canvas.getContext('2d');
+    
+    function drawScore(percent) {
+        ctx.clearRect(0, 0, 200, 200);
+        const angle = (percent / 100) * Math.PI * 2;
+        ctx.beginPath();
+        ctx.arc(100, 100, 85, 0, Math.PI * 2);
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)';
+        ctx.lineWidth = 12;
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.arc(100, 100, 85, -Math.PI / 2, -Math.PI / 2 + angle);
+        ctx.strokeStyle = '#00F5FF';
+        ctx.lineWidth = 12;
+        ctx.stroke();
+        document.getElementById('scoreValue').innerHTML = Math.floor(percent) + '<span style="font-size:1.5rem;">%</span>';
+    }
+    drawScore(currentHealthScore);
+
+    function addAIMessage(text, isUser = false) {
+        const msgDiv = document.createElement('div');
+        msgDiv.style.padding = '12px 18px';
+        msgDiv.style.margin = '8px 0';
+        msgDiv.style.borderRadius = '20px';
+        msgDiv.style.maxWidth = '85%';
+        msgDiv.style.alignSelf = isUser ? 'flex-end' : 'flex-start';
+        msgDiv.style.background = isUser ? 'rgba(0,245,255,0.15)' : 'rgba(139,92,246,0.15)';
+        msgDiv.style.border = isUser ? '1px solid rgba(0,245,255,0.3)' : '1px solid rgba(139,92,246,0.3)';
+        msgDiv.textContent = text;
+        chatMessages.appendChild(msgDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    async function analyzeWithAI(symptoms) {
+        if (!symptoms.trim()) return;
+        addAIMessage(symptoms, true);
+        symptomInput.value = '';
+        
+        // Анимация AI анализа
+        const animDiv = document.createElement('div');
+        animDiv.className = 'ai-analysis-animation';
+        animDiv.innerHTML = '🧠 Анализ нейросети...<div class="confidence-bar"><div class="confidence-fill" style="width: 0%;"></div></div>';
+        chatMessages.appendChild(animDiv);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+        
+        // симуляция прогресса
+        await new Promise(r => setTimeout(r, 500));
+        const fill = animDiv.querySelector('.confidence-fill');
+        fill.style.width = '40%';
+        await new Promise(r => setTimeout(r, 400));
+        fill.style.width = '80%';
+        await new Promise(r => setTimeout(r, 400));
+        fill.style.width = '100%';
+        await new Promise(r => setTimeout(r, 300));
+        
+        // удаляем анимацию
+        animDiv.remove();
+        
+        // генерация ответа ИИ
+        let response = generateMedicalResponse(symptoms);
+        addAIMessage(response, false);
+        
+        // обновляем confidence и health score
+        currentConfidence = Math.floor(Math.random() * 15) + 80;
+        currentHealthScore = Math.floor(Math.random() * 20) + 70;
+        drawScore(currentHealthScore);
+        
+        // добавим блок confidence
+        const confidenceMsg = document.createElement('div');
+        confidenceMsg.style.background = 'rgba(0,0,0,0.5)';
+        confidenceMsg.style.padding = '12px';
+        confidenceMsg.style.borderRadius = '16px';
+        confidenceMsg.style.margin = '8px 0';
+        confidenceMsg.style.fontSize = '0.8rem';
+        confidenceMsg.style.border = '1px solid rgba(0,245,255,0.2)';
+        confidenceMsg.innerHTML = `📊 AI Confidence: ${currentConfidence}% &nbsp;&nbsp;|&nbsp;&nbsp; Risk Level: ${currentConfidence > 70 ? 'Low' : (currentConfidence > 40 ? 'Moderate' : 'High')}`;
+        chatMessages.appendChild(confidenceMsg);
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+
+    function generateMedicalResponse(text) {
+        const q = text.toLowerCase();
+        if (q.match(/(голов|мигрень|температура|тошнит)/i)) 
+            return "🩺 Диагностика завершена. Вероятные причины: мигрень или вирусная инфекция. Рекомендация: покой, обильное питьё, при T > 38.5 — жаропонижающее. Обратитесь к терапевту, если симптомы сохранятся более 3 дней.";
+        if (q.match(/(горло|кашель|насморк)/i))
+            return "🩺 AI-анализ: признаки ОРВИ или фарингита. Рекомендация: полоскание горла, тёплое питьё, постельный режим. Confidence: 94%";
+        if (q.match(/(живот|тошнит|рвота|диарея)/i))
+            return "🧬 AI диагностика: возможное пищевое отравление или гастрит. Пейте регидрон, исключите жирную пищу. При острой боли — немедленно к врачу.";
+        if (q.match(/(сердце|грудь|одышка)/i))
+            return "🚨 AI система предупреждает: возможны сердечные проявления. НЕМЕДЛЕННО вызовите скорую (103) или обратитесь к кардиологу!";
+        return "🧠 AI нейросеть проанализировала симптомы. Рекомендуется отдых, наблюдение за состоянием. Если симптомы ухудшатся — обратитесь к врачу. Confidence: " + (Math.floor(Math.random() * 20) + 75) + "%";
+    }
+
+    analyzeBtn.addEventListener('click', () => analyzeWithAI(symptomInput.value));
+    symptomInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') analyzeWithAI(symptomInput.value); });
+    document.getElementById('startDiagnosticBtn').addEventListener('click', () => {
+        document.getElementById('diagnosticSection').scrollIntoView({ behavior: 'smooth' });
+    });
+
+    // модальные окна для первой помощи (простой alert для киберпанк-стиля)
+    const aidInfo = {
+        burn: "🔥 Ожог: охладите под водой 15-20 мин, накройте стерильной повязкой. Не используйте масло! При сильных ожогах — вызовите скорую.",
+        fracture: "🦴 Перелом: обеспечьте неподвижность, холод на 20 мин, шина, вызовите скорую.",
+        bleeding: "🩸 Кровотечение: прямое давление на рану, при сильном — жгут выше раны с отметкой времени.",
+        heart: "❤️ Сердечный приступ: вызовите скорую, усадите, дайте аспирин (если нет аллергии).",
+        faint: "⚡ Потеря сознания: проверьте пульс, уложите на бок, вызовите скорую.",
+        bite: "🐍 Укус: промойте водой с мылом, обратитесь к врачу (риск бешенства/столбняка)."
+    };
+    document.querySelectorAll('.glass-card').forEach(card => {
+        card.addEventListener('click', () => {
+            const type = card.getAttribute('data-aid');
+            if (aidInfo[type]) alert(aidInfo[type]);
+        });
+    });
+
+    // анимация счетчиков статистики
+    const counters = [
+        { elem: document.getElementById('stat1'), target: 500000, current: 0, suffix: '+' },
+        { elem: document.getElementById('stat2'), target: 98.7, current: 0, suffix: '%' },
+        { elem: document.getElementById('stat3'), target: 24, current: 0, suffix: '/7' },
+        { elem: document.getElementById('stat4'), target: 150, current: 0, suffix: '+' }
+    ];
+    function animateCounters() {
+        counters.forEach(c => {
+            let step = c.target / 50;
+            let interval = setInterval(() => {
+                c.current += step;
+                if (c.current >= c.target) {
+                    c.current = c.target;
+                    clearInterval(interval);
+                }
+                if (c.elem) c.elem.innerText = Math.floor(c.current) + c.suffix;
+            }, 30);
+        });
+    }
+    setTimeout(animateCounters, 500);
+</script>
+</body>
+</html>
